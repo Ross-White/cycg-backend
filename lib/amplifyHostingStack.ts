@@ -49,7 +49,7 @@ export class AmplifyHostingStack extends cdk.Stack {
 			}),
     })
 
-    amplifyApp.addBranch('master', {
+    amplifyApp.addBranch('main', {
       stage: 'PRODUCTION'
     })
 
