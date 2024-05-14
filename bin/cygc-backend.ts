@@ -5,6 +5,7 @@ import { AmplifyHostingStack } from '../lib/amplifyHostingStack';
 
 const app = new cdk.App();
 new AmplifyHostingStack(app, 'CygcBackendStack', {
+  appName: 'Clock',
   owner: 'Ross-White',
   repository: 'cygc-clock',
   githubOauthTokenName: 'github-token',
