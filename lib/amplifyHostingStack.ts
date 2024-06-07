@@ -9,7 +9,6 @@ import {
 } from '@aws-cdk/aws-amplify-alpha'
 import * as amplify from 'aws-cdk-lib/aws-amplify'
 import { StackProps } from 'aws-cdk-lib'
-import { IamResource } from 'aws-cdk-lib/aws-appsync'
 
 interface HostingStackProps extends StackProps {
   appName: string
@@ -67,12 +66,15 @@ export class AmplifyHostingStack extends cdk.Stack {
 			}),
     })
 
-    amplifyApp.addBranch('main', {
+    const cfnAmplifyApp = amplifyApp.node.defaultChild as amplify.CfnApp
+		cfnAmplifyApp.platform = 'WEB_COMPUTE'
+
+    const mainBranch = amplifyApp.addBranch('main', {
       stage: 'PRODUCTION'
     })
 
-		const cfnAmplifyApp = amplifyApp.node.defaultChild as amplify.CfnApp
-		cfnAmplifyApp.platform = 'WEB_COMPUTE'
+    const cfnBranch = mainBranch.node.defaultChild as amplify.CfnBranch;
+    cfnBranch.framework = 'Next.js - SSR';
 
 		new cdk.CfnOutput(this, 'appId', {
 			value: amplifyApp.appId,
