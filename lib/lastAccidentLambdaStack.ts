@@ -29,21 +29,31 @@ export class LastAccidentLambdaStack extends cdk.Stack {
         })
       )
 
-      const lastAccidentApi = new apigateway.LambdaRestApi(this, 'LastAccidentApi', {
-        handler: lastAccidentFunction,
-        proxy: false,
+      const accidentApi = new apigateway.RestApi(this, 'AccidentApi', {
+        restApiName: 'AccidentApi',
+        apiKeySourceType: apigateway.ApiKeySourceType.HEADER
       })
-        
-      const lastAccidentResource = lastAccidentApi.root.addResource('lastAccident');
-      lastAccidentResource.addMethod('GET')
 
-      const newAccidentApi = new apigateway.LambdaRestApi(this, 'NewAccidentApi', {
-        handler: newAccidentFunction,
-        proxy: false,
+      const accidents = accidentApi.root.addResource('accidents')
+      const lastAccidentIntegration = new apigateway.LambdaIntegration(lastAccidentFunction)
+      const newAccidentIntegration = new apigateway.LambdaIntegration(newAccidentFunction)
+
+      accidents.addMethod('GET', lastAccidentIntegration, {
+        apiKeyRequired: true
       })
-        
-      const newAccidentResource = newAccidentApi.root.addResource('newAccident');
-      newAccidentResource.addMethod('POST')
+      accidents.addMethod('POST', newAccidentIntegration, {
+        apiKeyRequired: true
+      })
+      const accidentApiKey = new apigateway.ApiKey(this, 'AccidentApiKey', {
+        apiKeyName: 'accidentsKey',
+      })
+      const usagePlan = accidentApi.addUsagePlan('UsagePlan', {
+        name: 'Accidents Usage Plan',
+      })
+      usagePlan.addApiStage({
+        stage: accidentApi.deploymentStage
+      })
+      usagePlan.addApiKey(accidentApiKey)
 
       const accidentTable = new dynamodb.TableV2(this, 'AccidentTable', {
         tableName: 'AccidentLog',
