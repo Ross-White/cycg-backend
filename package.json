@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@aws-cdk/aws-amplify-alpha": "^2.39.1-alpha.0",
+    "@aws-sdk/lib-dynamodb": "^3.592.0",
+    "@types/uuid": "^9.0.8",
     "aws-cdk-lib": "2.140.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"
