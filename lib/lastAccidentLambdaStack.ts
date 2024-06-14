@@ -63,14 +63,14 @@ export class LastAccidentLambdaStack extends cdk.Stack {
       sortKey: {name: 'date', type: dynamodb.AttributeType.NUMBER},
 
     })
-    new cdk.CfnOutput(this, 'ApiEndpoint', {
+    new cdk.CfnOutput(this, 'accidentsApiEndpoint', {
       value: accidentApi.url,
-      exportName: 'MyApiEndpoint'
+      exportName: 'accidentsApiEndpoint'
     });
 
-    new cdk.CfnOutput(this, 'ApiKey', {
+    new cdk.CfnOutput(this, 'accidentsApiKey', {
       value: accidentApiKey.keyId,
-      exportName: 'MyApiKey'
+      exportName: 'accidentsApiKey'
     });
 
     this.accidentsApiEndpoint = accidentApi.url;
