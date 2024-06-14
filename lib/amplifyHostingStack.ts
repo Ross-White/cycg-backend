@@ -22,7 +22,6 @@ export class AmplifyHostingStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: HostingStackProps) {
     super(scope, id, props);
     const accidentsApiEndpoint = cdk.Fn.importValue('accidentsApiEndpoint');
-    const accidentsApiKey = cdk.Fn.importValue('accidentsApiKey');
 
     const role = new iam.Role(this, 'AmplifyDeploymentRole', {
       assumedBy: new iam.ServicePrincipal('amplify.amazonaws.com'),
@@ -66,9 +65,11 @@ export class AmplifyHostingStack extends cdk.Stack {
 					},
 				},
 			}),
+      environmentVariables: {
+        ACCIDENTS_API_ENDPOINT: accidentsApiEndpoint,
+        ACCIDENTS_API_KEY: cdk.SecretValue.secretsManager('accidentsApiKey').toString()
+      }
     })
-    amplifyApp.addEnvironment('ACCIDENTS_API_ENDPOINT', accidentsApiEndpoint);
-    amplifyApp.addEnvironment('ACCIDENTS_API_KEY', accidentsApiKey);
 
     const cfnAmplifyApp = amplifyApp.node.defaultChild as amplify.CfnApp
 		cfnAmplifyApp.platform = 'WEB_COMPUTE'
