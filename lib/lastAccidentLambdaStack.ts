@@ -7,7 +7,6 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 
 export class LastAccidentLambdaStack extends cdk.Stack {
   public readonly accidentsApiEndpoint: string;
-  public readonly accidentsApiKey: string;
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props)
 
@@ -63,17 +62,12 @@ export class LastAccidentLambdaStack extends cdk.Stack {
       sortKey: {name: 'date', type: dynamodb.AttributeType.NUMBER},
 
     })
+
     new cdk.CfnOutput(this, 'accidentsApiEndpoint', {
       value: accidentApi.url,
       exportName: 'accidentsApiEndpoint'
     });
 
-    new cdk.CfnOutput(this, 'accidentsApiKey', {
-      value: accidentApiKey.keyId,
-      exportName: 'accidentsApiKey'
-    });
-
     this.accidentsApiEndpoint = accidentApi.url;
-    this.accidentsApiKey = accidentApiKey.keyId;
   }
 }
